@@ -1,7 +1,7 @@
 package org.example.core
 
 interface ValidationRule {
-    fun validate(value: Any?): String?
+    fun validate(fieldName: String, value: Any?): ValidationError?
 }
 
 // list anootation``annotation

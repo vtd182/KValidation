@@ -1,13 +1,33 @@
 package org.example.core
 class ValidationContext {
-    private val rules = mutableListOf<ValidationRule>()
+    private val observers = mutableListOf<Observer>()
+    private val errorMap: MutableMap<String, MutableList<ValidationError>> = mutableMapOf()
 
-    fun addRule(rule: ValidationRule): ValidationContext {
-        rules.add(rule)
-        return this
+    fun addObserver(observer: Observer) {
+        observers.add(observer)
     }
 
-    fun validate(value: Any?): List<String> {
-        return rules.mapNotNull { it.validate(value) }
+    fun removeObserver(observer: Observer) {
+        observers.remove(observer)
     }
+
+    fun notifyObservers() {
+        observers.forEach { it.update(errorMap) }
+    }
+
+    fun addError(field: String, error: ValidationError) {
+        errorMap.computeIfAbsent(field) { mutableListOf() }.add(error)
+        notifyObservers()
+    }
+
+    fun getErrors(): Map<String, List<ValidationError>> = errorMap
+
+    fun clearErrors() {
+        errorMap.clear()
+        notifyObservers()
+    }
+}
+
+interface Observer {
+    fun update(errors: Map<String, List<ValidationError>>)
 }
