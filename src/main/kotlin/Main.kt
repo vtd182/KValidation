@@ -19,6 +19,11 @@ fun validateWithAnnotations(user: User) {
 }
 
 fun main() {
-    val user = User(name = "", age = 16, email = "invalid-email")
-    println(user)
+    try {
+        val user = User(name = "", age = 16, email = "invalid-email")
+        println(user)
+    } catch (e: ValidationException) {
+        println("haha con cho ngu")
+        println(e)
+    }
 }
