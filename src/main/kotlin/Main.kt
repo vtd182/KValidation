@@ -1,22 +1,22 @@
 package org.example
 
+import org.example.annotations.Min
+import org.example.annotations.NotEmpty
+import org.example.annotations.Regex
+import org.example.core.ValidatableObject
 import org.example.core.ValidationException
-import org.example.rules.AnnotationProcessor
 
+data class User(
+    @NotEmpty
+    val name: String,
 
-fun validateWithAnnotations(user: User) {
-    val processor = AnnotationProcessor()
-    val rules = processor.processAnnotations(user)
-    val validator = org.example.core.ValidatorFactory().createValidator(rules)
+    @Min(18)
+    val age: Int,
 
-    val errors = validator.validate(user)
+    @Regex("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\$")
+    val email: String
+) : ValidatableObject()
 
-    if (errors.isNotEmpty()) {
-        throw ValidationException(errors)
-    } else {
-        println("Validation passed successfully!")
-    }
-}
 
 fun main() {
     try {
